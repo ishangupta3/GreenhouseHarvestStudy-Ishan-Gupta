@@ -4,19 +4,11 @@
 
 It's mid-July 2025 at Hippo Harvest, and it's hot.  There's lots of daylight, so our leafy greens are growing really fast, and we need to harvest them at the optimal point in their growth cycle.  Our robots write a bunch of data about the plant's growth cycle to the database, but we need better tooling for scheduling when to harvest the crops in greenhouses.
 
-You are tasked with building a simple harvest planning system for a greenhouse operation, with a REST API layer written in Python and frontend in JavaScript. This case study tests your ability to work with Python, PostgreSQL, Docker Compose and JavaScript.  
-
-## Background
-
-The simplified mock farm in this test case operates 3 large greenhouses, each with a 50x8 grid layout (400 slots per greenhouse, 1200 total slots). Each slot can be occupied by a crop.  The database contains information about:
-
-* **Crop cycles**: Individual plantings with complete lifecycle data from seed to harvest
-* **Locations**: Physical slots in the greenhouse where crops are grown (50x8 grid per greenhouse)
-* **ML Harvest Predictions**: Machine learning predictions for harvest dates and yields in pounds
-
 ## Your Task
 
-Build a simple API and web interface to help the operations team plan harvests. As part of this project, you should:
+You are tasked with building a simple harvest planning system for a greenhouse operation, with a REST API layer written in Python and frontend in JavaScript. This case study tests your ability to work with Python, PostgreSQL, Docker Compose and JavaScript.  
+
+This includes building a simple API and web interface to help the operations team plan harvests. As part of this project, you should:
 
 * Create a Python REST API to serve the data to downstream services. We need intuitive REST APIs at our farm since multiple downstream services consume this data.
 
@@ -26,9 +18,17 @@ Build a simple API and web interface to help the operations team plan harvests. 
 
 * Ensure the developer experience for adding new features or making changes is simple and well-documented
 
-We expect that you'll use AI coding assistants to help build this. That's great — and you'll need to be able to explain all the code that the AI assistant generates. In the interview you'll be asked to present your solution, and then be asked detailed questions about the design choices, frameworks, and coding patterns you implemented.
+We expect that you'll use AI coding assistants to help build this. That's great — and you'll need to be able to explain all the code that the AI assistant generates. In the interview, you'll be asked to present your solution, and then be asked detailed questions about the design choices, frameworks, and coding patterns you implemented.
 
 This case study is very open-ended. If something's unclear, feel free to document your assumptions and move forward. We expect our engineers at Hippo Harvest to work autonomously, and the case is designed to reflect that. We expect this case study to take no more than half a day's work.
+
+## Background
+
+The simplified mock farm in this test case operates 3 large greenhouses, each with a 50x8 grid layout (400 slots per greenhouse, 1200 total slots). Each slot can be occupied by a crop.  The database contains information about:
+
+* **Crop cycles**: Individual plantings with complete lifecycle data from seed to harvest
+* **Locations**: Physical slots in the greenhouse where crops are grown (50x8 grid per greenhouse)
+* **ML Harvest Predictions**: Machine learning predictions for harvest dates and yields in pounds
 
 ## Getting Started
 
