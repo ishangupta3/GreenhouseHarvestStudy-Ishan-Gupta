@@ -6,7 +6,7 @@ It's mid-July 2025 at Hippo Harvest, and it's hot.  There's lots of daylight, so
 
 ## Your Task
 
-You are tasked with building a simple harvest planning system for a greenhouse operation, with a REST API layer written in Python and frontend web app. This case study tests your ability to work with Python, PostgreSQL, Docker Compose and web apps.
+You are tasked with building a simple harvest planning system for a greenhouse operation, with a REST API layer written in Python and frontend web app. This case study tests your ability to work with Python, PostgreSQL, Docker Compose and web apps.  A starter git repo is located here:
 
 This includes building a simple API and web interface to help the operations team plan harvests. As part of this project, you should:
 
@@ -19,6 +19,8 @@ This includes building a simple API and web interface to help the operations tea
   * For the mock mini-farm, planners should target a harvest of 4 kgs of greens, five days a week, for each crop: lettuce, arugula, spinach, and kale.  It may not be possible each day, but the planner should strive for consistent production levels.
 
 * Ensure the developer experience for adding new features or making changes is simple and well-documented
+
+[A starter git repo for this project is located at this link](https://github.com/Hippo-Harvest/fullstack-case-study-2025).  You need a GitHub login for access.
 
 We expect that you'll use AI coding assistants to help build this. That's great — and you'll need to be able to explain all the code that the AI assistant generates. In the interview, you'll be asked to present your solution, and then be asked detailed questions about the design choices, frameworks, and coding patterns you implemented.
 
