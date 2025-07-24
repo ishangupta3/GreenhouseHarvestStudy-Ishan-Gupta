@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenhouse Harvest Planning System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .date-selector {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .date-selector input, .date-selector button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .date-selector button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .date-selector button:hover {
+            background: #45a049;
+        }
+        .crop-section {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .crop-header {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            font-weight: bold;
+        }
+        .crop-content {
+            padding: 15px;
+        }
+        .crop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 10px;
+        }
+        .crop-item {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #4CAF50;
+        }
+        .crop-item h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .crop-item p {
+            margin: 2px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .summary {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .summary h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 Greenhouse Harvest Planning System</h1>
+            <p>ML-Powered Harvest Scheduling for July 21-31, 2025</p>
+        </div>
+        
+        <div class="content">
+            <div class="date-selector">
+                <label for="harvest-date"><strong>Select Harvest Date:</strong></label>
+                <input type="date" id="harvest-date" value="2025-07-21" min="2025-07-21" max="2025-07-31">
+                <button onclick="loadCrops()">Get Available Crops</button>
+                <button onclick="loadHealth()">Check System Health</button>
+            </div>
+            
+            <div id="summary" class="summary" style="display: none;">
+                <h3>📊 Summary</h3>
+                <div id="summary-content"></div>
+            </div>
+            
+            <div id="results">
+                <div class="loading">Select a date and click "Get Available Crops" to see harvest recommendations</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadCrops() {
+            const date = document.getElementById('harvest-date').value;
+            const resultsDiv = document.getElementById('results');
+            const summaryDiv = document.getElementById('summary');
+            
+            resultsDiv.innerHTML = '<div class="loading">Loading available crops...</div>';
+            summaryDiv.style.display = 'none';
+            
+            try {
+                const response = await fetch(`/api/crops/${date}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Error loading data: ${error.message}</div>`;
+            }
+        }
+        
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+            const summaryDiv = document.getElementById('summary');
+            const summaryContent = document.getElementById('summary-content');
+            
+            // Display summary
+            summaryContent.innerHTML = `
+                <p><strong>Date:</strong> ${data.date}</p>
+                <p><strong>Total Available Crops:</strong> ${data.summary.total_available_crops}</p>
+                <p><strong>Total Predicted Yield:</strong> ${data.summary.total_predicted_yield_kg} kg</p>
+            `;
+            summaryDiv.style.display = 'block';
+            
+            // Display crops by type
+            let html = '';
+            const cropTypes = ['LETTUCE', 'ARUGULA', 'SPINACH', 'KALE'];
+            
+            cropTypes.forEach(cropType => {
+                const crops = data.crops[cropType] || [];
+                if (crops.length > 0) {
+                    html += `
+                        <div class="crop-section">
+                            <div class="crop-header">${cropType} (${crops.length} crops available)</div>
+                            <div class="crop-content">
+                                <div class="crop-grid">
+                    `;
+                    
+                    crops.slice(0, 10).forEach(crop => { // Show first 10 crops
+                        const yieldKg = (crop.predicted_yield_g / 1000).toFixed(2);
+                        const confidencePercent = (crop.confidence_score * 100).toFixed(1);
+                        
+                        html += `
+                            <div class="crop-item">
+                                <h4>${crop.sub_crop}</h4>
+                                <p><strong>Yield:</strong> ${yieldKg} kg</p>
+                                <p><strong>Confidence:</strong> ${confidencePercent}%</p>
+                                <p><strong>Plants:</strong> ${crop.num_plants}</p>
+                                <p><strong>Location:</strong> House ${crop.house_number}, (${crop.x_position}, ${crop.y_position})</p>
+                            </div>
+                        `;
+                    });
+                    
+                    if (crops.length > 10) {
+                        html += `<p><em>... and ${crops.length - 10} more crops</em></p>`;
+                    }
+                    
+                    html += `
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="crop-section">
+                            <div class="crop-header">${cropType}</div>
+                            <div class="crop-content">
+                                <p>No crops available for this date with high confidence predictions.</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        async function loadHealth() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                alert(`System Health: ${data.status}\nDatabase: ${data.database}`);
+            } catch (error) {
+                alert(`Health check failed: ${error.message}`);
+            }
+        }
+        
+        // Load initial data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default date to July 21, 2025
+            document.getElementById('harvest-date').value = '2025-07-21';
+        });
+    </script>
+</body>
+</html> 
